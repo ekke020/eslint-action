@@ -42,7 +42,7 @@ const main = async () => {
 
   const context = github.context;
   console.log(context);
-  const pullId = context.payload.pull_request.number;
+  const id = context.payload.pull_request.number;
   const repo = context.payload.repository.name;
   const owner = context.actor;
   const files = await lint();
@@ -51,17 +51,12 @@ const main = async () => {
   const path = files[0].filePath;
   const startLine = files[0].errors[0].line;
   const endLine = files[0].errors[0].endLine;
-  await octokit.request(`POST /repos/${owner}/${repo}/pulls/${pullId}/comments`, {
-    owner: owner,
-    repo: repo,
-    pull_number: pullId,
-    body: 'Great stuff!',
-    commit_id: commit,
-    path: path,
-    start_line: startLine,
-    start_side: 'RIGHT',
-    line: endLine,
-    side: 'RIGHT',
+
+  octokit.rest.issues.createComment({
+    owner,
+    repo,
+    id,
+    body: 'Does this work?',
   });
 };
 
