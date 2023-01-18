@@ -1,6 +1,6 @@
-import { ESLint } from 'eslint';
-import * as github from '@actions/github';
-import * as core from '@actions/core';
+const { ESLint } = require('eslint');
+const core = require('@actions/core');
+const github = require('@actions/github');
 
 const AUTOFIX = core.getInput('auto_fix');
 
