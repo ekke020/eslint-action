@@ -38,20 +38,24 @@ const lint = async () => {
 
 const main = async () => {
   const myToken = core.getInput('token');
-
   const octokit = github.getOctokit(myToken);
 
   const context = github.context;
-
-  try {
-    const newIssue = await octokit.rest.issues.createComment({
-      ...context.repo,
-      title: 'New issue!',
-      body: 'Hello Universe!',
-    });
-  } catch (err) {
-    console.log(err);
-  }
+  console.log(context);
+  const ref = context.ref;
+  console.log(ref);
+  await octokit.request(`POST /repos/${context.repo}/eslint-action/pulls/{pull_number}/comments`, {
+    owner: 'OWNER',
+    repo: 'REPO',
+    pull_number: 'PULL_NUMBER',
+    body: 'Great stuff!',
+    commit_id: '6dcb09b5b57875f334f61aebed695e2e4193db5e',
+    path: 'file1.txt',
+    start_line: 1,
+    start_side: 'RIGHT',
+    line: 2,
+    side: 'RIGHT',
+  });
 };
 
 main();
