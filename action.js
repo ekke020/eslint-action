@@ -44,14 +44,14 @@ const main = async () => {
   console.log(context);
   const pullId = context.payload.pull_request.number;
   const repo = context.payload.repository.name;
-
+  const owner = context.payload.repository.owner.name;
   const files = await lint();
 
   const path = files[0].filePath;
   const startLine = files[0].errors[0].line;
   const endLine = files[0].errors[0].endLine;
 
-  await octokit.request(`POST /repos/${context.repo}/${repo}/pulls/${pullId}/comments`, {
+  await octokit.request(`POST /repos/${owner}/${repo}/pulls/${pullId}/comments`, {
     ...context,
     body: 'Great stuff!',
     path: path,
