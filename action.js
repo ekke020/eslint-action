@@ -2,7 +2,7 @@ const { ESLint } = require('eslint');
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-const AUTOFIX = core.getInput('auto_fix');
+const AUTOFIX = core.getInput('auto_fix') === 'true';
 
 const sortErrors = (file) => {
   const errors = AUTOFIX ? file.messages.filter((message) => !message.fix) : file.messages;
