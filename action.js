@@ -40,7 +40,7 @@ const main = async () => {
   const myToken = core.getInput('token');
 
   const context = github.context;
-  console.log(context);
+  // console.log(context);
   const id = context.payload.pull_request.number;
   const repo = context.payload.repository.name;
   const owner = context.actor;
@@ -52,7 +52,7 @@ const main = async () => {
   const endLine = files[0].errors[0].endLine;
 
   const octokit = github.getOctokit(myToken);
-
+  console.log(octokit);
   await octokit.rest.pulls.createReviewComment({
     owner,
     repo,
