@@ -1,0 +1,26 @@
+{
+  "name": "eslint-action",
+  "version": "1.0.0",
+  "description": "",
+  "main": "action.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ekke020/eslint-action.git"
+  },
+  "author": "Johan Ekman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ekke020/eslint-action/issues"
+  },
+  "homepage": "https://github.com/ekke020/eslint-action#readme",
+  "dependencies": {
+    "eslint": "^8.32.0"
+  },
+  "devDependencies": {
+    "eslint-config-airbnb-base": "^15.0.0"
+  }
+}

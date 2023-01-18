@@ -1,0 +1,17 @@
+name: "Auto eslint formatter"
+description: "Format JS code with EsLint & leave comments"
+author: "Johan Ekman"
+
+inputs:
+  auto_fix:
+    description: "Auto fixes certain errors/warnings"
+    required: false
+    default: "false"
+  path:
+    description: "the path for the lint"
+    required: false
+    default: "src/*"
+
+runs:
+  using: node16
+  main: ./action.js
