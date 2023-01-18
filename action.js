@@ -43,11 +43,15 @@ const main = async () => {
 
   const context = github.context;
 
-  const newIssue = await octokit.rest.issues.createComment({
-    ...context.repo,
-    title: 'New issue!',
-    body: 'Hello Universe!',
-  });
+  try {
+    const newIssue = await octokit.rest.issues.createComment({
+      ...context.repo,
+      title: 'New issue!',
+      body: 'Hello Universe!',
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 main();
