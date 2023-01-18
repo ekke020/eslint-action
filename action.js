@@ -14,11 +14,11 @@ const sortErrors = (file) => {
 };
 
 const getErrors = (lintResults) => {
-  const errors = [];
+  const files = [];
   ESLint.getErrorResults(lintResults).forEach((file) => {
-    errors.push(sortErrors(file));
+    files.push(sortErrors(file));
   });
-  return errors;
+  return files;
 };
 
 const lint = async () => {
@@ -33,7 +33,7 @@ const lint = async () => {
   if (AUTOFIX) {
     await ESLint.outputFixes(results);
   }
-  console.log(errors);
+  return errors;
 };
 
 const main = async () => {
@@ -42,18 +42,22 @@ const main = async () => {
 
   const context = github.context;
   console.log(context);
-  const ref = context.ref;
-  console.log(ref);
-  await octokit.request(`POST /repos/${context.repo}/eslint-action/pulls/{pull_number}/comments`, {
-    owner: 'OWNER',
-    repo: 'REPO',
-    pull_number: 'PULL_NUMBER',
+  const pullId = context.payload.pull_request.number;
+  const repo = context.payload.repository.name;
+
+  const files = await lint();
+
+  const path = files[0].filePath;
+  const startLine = files[0].errors[0].line;
+  const endLine = files[0].errors[0].endLine;
+
+  await octokit.request(`POST /repos/${context.repo}/${repo}/pulls/${pullId}/comments`, {
+    ...context,
     body: 'Great stuff!',
-    commit_id: '6dcb09b5b57875f334f61aebed695e2e4193db5e',
-    path: 'file1.txt',
-    start_line: 1,
+    path: path,
+    start_line: startLine,
     start_side: 'RIGHT',
-    line: 2,
+    line: endLine,
     side: 'RIGHT',
   });
 };
