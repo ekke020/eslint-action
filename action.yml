@@ -11,7 +11,14 @@ inputs:
     description: "the path for the lint"
     required: false
     default: "src/*"
-
+  token:
+    description: "Token used for comments"
+    required: true
+  comment:
+    description: "Leave comments on the PR"
+    required: false
+    default: "false"
+    
 runs:
   using: node16
-  main: ./action.js
+  main: action.js

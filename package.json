@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/ekke020/eslint-action#readme",
   "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1",
     "eslint": "^8.32.0"
   },
   "devDependencies": {
