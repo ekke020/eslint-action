@@ -38,7 +38,6 @@ const lint = async () => {
 
 const main = async () => {
   const myToken = core.getInput('token');
-  const octokit = github.getOctokit(myToken);
 
   const context = github.context;
   console.log(context);
@@ -46,18 +45,30 @@ const main = async () => {
   const repo = context.payload.repository.name;
   const owner = context.actor;
   const files = await lint();
-  const commit = context.sha;
+  const commitId = context.sha;
 
   const path = files[0].filePath;
   const startLine = files[0].errors[0].line;
   const endLine = files[0].errors[0].endLine;
 
-  octokit.rest.issues.createComment({
+  const octokit = github.getOctokit(myToken);
+
+  await octokit.rest.pulls.createReviewComment({
     owner,
     repo,
     id,
-    body: 'Does this work?',
+    body: 'plz work',
+    commit_id: commitId,
+    path: 'src/lint.js',
+    line: endLine,
+    start_line: startLine,
   });
+  // await octokit.rest.issues.createComment({
+  //   owner,
+  //   repo,
+  //   id,
+  //   body: 'Does this work?',
+  // });
 };
 
 main();
