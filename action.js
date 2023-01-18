@@ -44,7 +44,7 @@ const main = async () => {
   console.log(context);
   const pullId = context.payload.pull_request.number;
   const repo = context.payload.repository.name;
-  const owner = context.payload.repository.owner.name;
+  const owner = context.actor;
   const files = await lint();
 
   const path = files[0].filePath;
