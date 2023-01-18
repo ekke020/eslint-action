@@ -1,5 +1,5 @@
 name: Testing action
-on: [pull_request]
+on: [push, pull_request]
 
 jobs:
   testing:
@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          ref: test
       - name: Setup Node
         uses: actions/setup-node@v3
       - name: Install dependencies
