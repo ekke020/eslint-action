@@ -1,5 +1,5 @@
 name: Testing action
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   testing:
