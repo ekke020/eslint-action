@@ -53,22 +53,21 @@ const main = async () => {
 
   const octokit = github.getOctokit(myToken);
 
-  await octokit.rest.pulls.createReviewComment({
-    owner,
-    repo,
-    id,
-    body: 'plz work',
-    commit_id: commitId,
-    path: 'src/lint.js',
-    line: endLine,
-    start_line: startLine,
-  });
-  // await octokit.rest.issues.createComment({
+  // await octokit.rest.pulls.createReview({
   //   owner,
   //   repo,
   //   id,
-  //   body: 'Does this work?',
+  //   body: 'plz work',
+  //   path: 'src/lint.js',
+  //   line: endLine,
+  //   start_line: startLine,
   // });
+  await octokit.rest.issues.createComment({
+    owner,
+    repo,
+    id,
+    body: 'Does this work?',
+  });
 };
 
 main();
