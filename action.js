@@ -51,12 +51,15 @@ const main = async () => {
   const startLine = files[0].errors[0].line;
   const endLine = files[0].errors[0].endLine;
 
+  console.log('ID: ', id);
+  console.log('Repo: ', repo);
+  console.log('Owner: ', owner);
+  console.log('Commit-sha: ', commitId);
   const octokit = github.getOctokit(myToken);
-  console.log(octokit);
   await octokit.rest.pulls.createReviewComment({
     owner,
     repo,
-    id,
+    pull_number: id,
     body: 'plz work',
     commit_id: commitId,
     path: 'src/lint.js',
