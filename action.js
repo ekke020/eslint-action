@@ -56,7 +56,7 @@ const createReviewComment = async (message, path, endLine, startLine) => {
     pull_number: id,
     body: message,
     commit_id: commitId,
-    path,
+    path: 'src/lint.js',
     line: endLine,
     start_line: startLine,
   });
