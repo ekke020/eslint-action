@@ -85,6 +85,7 @@ const main = async () => {
   // const message = files[0].errors[0].message;
   const comb = combineErrors(files[0].errors);
   for (const line in comb) {
+    console.log(line);
     const message = createMessage(line.errors);
     await createReviewComment(message, path, line.line);
   }
