@@ -14,6 +14,7 @@ const commitId = github.context.payload.after;
 
 const getRelativePath = (path) => {
   const currentDir = process.cwd();
+  console.log(currentDir);
   const result = path.filePath.replace(currentDir, '.');
   return result;
 };
@@ -55,9 +56,9 @@ const createReviewComment = async (message, path, endLine, startLine) => {
     owner,
     repo,
     pull_number: id,
-    body: 'plz work',
+    body: message,
     commit_id: commitId,
-    path: 'src/lint.js',
+    path,
     line: endLine,
     start_line: startLine,
   });
