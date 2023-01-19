@@ -9,7 +9,6 @@ export const test = () => {
 };
 
 
-
 const badFunction = () => {
   console.log('This is not indented correctly');
 }
