@@ -45,7 +45,7 @@ const main = async () => {
   const repo = context.payload.repository.name;
   const owner = context.actor;
   const files = await lint();
-  const commitId = context.sha;
+  const commitId = context.payload.after;
 
   const path = files[0].filePath;
   const startLine = files[0].errors[0].line;
