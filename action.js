@@ -6,7 +6,6 @@ const AUTOFIX = core.getInput('auto_fix') === 'true';
 const TOKEN = core.getInput('token');
 const octokit = github.getOctokit(TOKEN);
 
-// const context = github.context;
 const id = github.context.payload.pull_request.number;
 const repo = github.context.payload.repository.name;
 const owner = github.context.actor;
@@ -14,7 +13,6 @@ const commitId = github.context.payload.after;
 
 const getRelativePath = (path) => {
   const currentDir = process.cwd();
-  console.log(currentDir);
   const result = path.replace(currentDir, '.');
   return result;
 };
