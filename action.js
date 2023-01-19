@@ -49,7 +49,7 @@ const lint = async () => {
   return errors;
 };
 
-const createReviewComment = async (message, path, endLine, startLine) => {
+const createReviewComment = async (message, path, line) => {
   await octokit.rest.pulls.createReviewComment({
     owner,
     repo,
@@ -57,19 +57,37 @@ const createReviewComment = async (message, path, endLine, startLine) => {
     body: message,
     commit_id: commitId,
     path,
-    line: endLine,
-    start_line: startLine,
+    line,
+    // start_line: startLine,
   });
+};
+
+const createMessage = (errors) => errors.reduce((m, error) => `${m}\n${error.message}`, '');
+const combineErrors = (errors) => {
+  const combined = errors.reduce((acc, error) => {
+    if (!acc[error.line]) {
+      acc[error.line] = {
+        line: error.line,
+        errors: [],
+      };
+    }
+    acc[error.line].errors.push(error);
+    return acc;
+  }, {});
+  return Object.values(combined);
 };
 
 const main = async () => {
   const files = await lint();
   const path = files[0].filePath;
-  const startLine = files[0].errors[0].line;
-  const endLine = files[0].errors[0].endLine;
-  const message = files[0].errors[0].message;
-
-  createReviewComment(message, path, endLine, startLine);
+  // const startLine = files[0].errors[0].line;
+  // const endLine = files[0].errors[0].endLine;
+  // const message = files[0].errors[0].message;
+  const comb = combineErrors(files[0].errors);
+  for (const line in comb) {
+    const message = createMessage(line.errors);
+    await createReviewComment(message, path, line.line);
+  }
 };
 
 main();
