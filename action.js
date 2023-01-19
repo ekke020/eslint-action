@@ -3,12 +3,26 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 
 const AUTOFIX = core.getInput('auto_fix') === 'true';
+const TOKEN = core.getInput('token');
+const octokit = github.getOctokit(TOKEN);
+
+// const context = github.context;
+const id = github.context.payload.pull_request.number;
+const repo = github.context.payload.repository.name;
+const owner = github.context.actor;
+const commitId = github.context.payload.after;
+
+const getRelativePath = (path) => {
+  const currentDir = process.cwd();
+  const result = path.filePath.replace(currentDir, '.');
+  return result;
+};
 
 const sortErrors = (file) => {
   const errors = AUTOFIX ? file.messages.filter((message) => !message.fix) : file.messages;
   const notAutoFixable = {
     errors,
-    filePath: file.filePath,
+    filePath: getRelativePath(file.filePath),
   };
   return notAutoFixable;
 };
@@ -36,26 +50,7 @@ const lint = async () => {
   return errors;
 };
 
-const main = async () => {
-  const myToken = core.getInput('token');
-
-  const context = github.context;
-  console.log(context);
-  const id = context.payload.pull_request.number;
-  const repo = context.payload.repository.name;
-  const owner = context.actor;
-  const files = await lint();
-  const commitId = context.payload.after;
-
-  const path = files[0].filePath;
-  const startLine = files[0].errors[0].line;
-  const endLine = files[0].errors[0].endLine;
-
-  console.log('ID: ', id);
-  console.log('Repo: ', repo);
-  console.log('Owner: ', owner);
-  console.log('Commit-sha: ', commitId);
-  const octokit = github.getOctokit(myToken);
+const createReviewComment = async (message, path, endLine, startLine) => {
   await octokit.rest.pulls.createReviewComment({
     owner,
     repo,
@@ -66,6 +61,16 @@ const main = async () => {
     line: endLine,
     start_line: startLine,
   });
+};
+
+const main = async () => {
+  const files = await lint();
+  const path = files[0].filePath;
+  const startLine = files[0].errors[0].line;
+  const endLine = files[0].errors[0].endLine;
+  const message = files[0].errors[0].message;
+
+  createReviewComment(message, path, endLine, startLine);
 };
 
 main();
