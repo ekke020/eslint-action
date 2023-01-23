@@ -84,12 +84,10 @@ const main = async () => {
   // const endLine = files[0].errors[0].endLine;
   // const message = files[0].errors[0].message;
   const comb = combineErrors(files[0].errors);
-  console.log(comb[0]);
-  for (const line in comb) {
-    console.log(line);
+  comb.forEach(async (line) => {
     const message = createMessage(line.errors);
     await createReviewComment(message, path, line.line);
-  }
+  });
 };
 
 main();
