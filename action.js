@@ -76,7 +76,7 @@ const createComment = async (message) => {
   await octokit.rest.issues.createComment({
     owner,
     repo,
-    pull_number: id,
+    issue_number: id,
     body: message,
   });
 };
