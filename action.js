@@ -64,14 +64,12 @@ const createReviewComment = async (message, path, line) => {
 
 const buildComment = (lines) => {
   console.log('Lines:', lines);
-  // const combined = lines.reduce((message, line) => {
-  //   const errors = line.errors.reduce((errors, err) => {
-  //     err.
-  //     return errors;
-  //   });
-  //   return message;
-  // }, 'There are other errors:');
-  return 'Just a filler';
+  const combined = lines.reduce(
+    (message, line) =>
+      message.concat(`\n${line.errors.reduce((m, err) => m.concat(`\n${err.message}`), '')}`),
+    'There are other errors:',
+  );
+  return combined;
 };
 
 const createComment = async (message) => {
@@ -99,13 +97,9 @@ const combineErrors = (errors) => {
 };
 
 const main = async () => {
-  console.log(github.context);
   const noDiffLines = [];
   const files = await lint();
   const path = files[0].filePath;
-  // const startLine = files[0].errors[0].line;
-  // const endLine = files[0].errors[0].endLine;
-  // const message = files[0].errors[0].message;
   console.log(files[0].errors[0]);
   const comb = combineErrors(files[0].errors);
   comb.forEach(async (line) => {
@@ -116,6 +110,7 @@ const main = async () => {
       noDiffLines.push(line);
     }
   });
+  console.log(noDiffLines);
   if (noDiffLines.length > 0) {
     const comment = buildComment(noDiffLines);
     await createComment(comment);
