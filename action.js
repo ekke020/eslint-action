@@ -1,8 +1,7 @@
-import lint from './lint';
-
 const { ESLint } = require('eslint');
 const core = require('@actions/core');
 const github = require('@actions/github');
+const lint = require('./lint');
 
 const AUTOFIX = core.getInput('auto_fix') === 'true';
 const TOKEN = core.getInput('token');
