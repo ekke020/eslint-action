@@ -96,30 +96,27 @@ const combineErrors = (errors) => {
   return Object.values(combined);
 };
 
-const test = async (noDiffLines) => {
-  if (noDiffLines.length > 0) {
-    const comment = buildComment(noDiffLines);
-    await createComment(comment);
-  }
-};
-const main = async () => {
-  const noDiffLines = [];
+const test = async () => {
   const files = await lint();
   const path = files[0].filePath;
-  console.log(files[0].errors[0]);
   const comb = combineErrors(files[0].errors);
-  comb.forEach(async (line) => {
+  const noDiffLines = [];
+  for await (const line of comb) {
     const message = createMessage(line.errors);
     try {
       await createReviewComment(message, path, line.line);
     } catch (err) {
-      console.log('???');
       noDiffLines.push(line);
-      console.log(noDiffLines);
     }
-  });
-  console.log('hello?', noDiffLines);
-  await test(noDiffLines);
+  }
+  return noDiffLines;
+};
+const main = async () => {
+  const noDiffLines = await test();
+  if (noDiffLines.length > 0) {
+    const comment = buildComment(noDiffLines);
+    await createComment(comment);
+  }
 };
 
 main();
