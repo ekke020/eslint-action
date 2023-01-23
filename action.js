@@ -96,6 +96,12 @@ const combineErrors = (errors) => {
   return Object.values(combined);
 };
 
+const test = async (noDiffLines) => {
+  if (noDiffLines.length > 0) {
+    const comment = buildComment(noDiffLines);
+    await createComment(comment);
+  }
+};
 const main = async () => {
   const noDiffLines = [];
   const files = await lint();
@@ -109,13 +115,11 @@ const main = async () => {
     } catch (err) {
       console.log('???');
       noDiffLines.push(line);
+      console.log(noDiffLines);
     }
   });
-  console.log(noDiffLines);
-  if (noDiffLines.length > 0) {
-    const comment = buildComment(noDiffLines);
-    await createComment(comment);
-  }
+  console.log('hello?', noDiffLines);
+  await test(noDiffLines);
 };
 
 main();
