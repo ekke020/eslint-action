@@ -24,15 +24,15 @@ const createReviewComment = async (message: string, path: string, line: number) 
   });
 };
 
-const fileSection = (file: any) => {
+const fileSection = (file: FileInformation) => {
   const errorList = file.errors.reduce(
-    (message: string, line: any) => message
+    (message: string, error) => message
       .concat(
-        `\n${line.errors.reduce((m: string, err: any) => m.concat(`\n- ${err.message}`), '')}`,
+        `\n${error.errors.reduce((m: string, err: String) => m.concat(`\n- ${err}`), '')}`,
       ),
     '',
   );
-  return `## ${file.path}\n${errorList}\nI could autofix ${file.fixableErrorCount}/${file.errorCount} errors.`;
+  return `## ./${file.path}\n${errorList}\n\n**I could autofix ${file.fixableErrorCount}/${file.errorCount} errors.**`;
 };
 
 const buildComment = (files: FileInformation[]) => files
