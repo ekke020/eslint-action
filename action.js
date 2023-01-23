@@ -107,6 +107,7 @@ const main = async () => {
     try {
       await createReviewComment(message, path, line.line);
     } catch (err) {
+      console.log('???');
       noDiffLines.push(line);
     }
   });
