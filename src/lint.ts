@@ -47,7 +47,7 @@ const lint = async (fix: boolean) => {
   const eslint = new ESLint({ fix });
 
   const result = await eslint
-    .lintFiles(['src/**/*.js']);
+    .lintFiles(['lint-tests/**/*.js']);
     
   return handleResult(result);
 };
