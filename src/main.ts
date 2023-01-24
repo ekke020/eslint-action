@@ -1,7 +1,8 @@
 #! /usr/bin/env node
 import * as core from '@actions/core';
 import * as github from '@actions/github';
-import {lint ,FileInformation, handleResult, formatedResult } from './lint';
+import { ESLint } from 'eslint';
+import {lint ,FileInformation, handleResult, formatedResult, GroupMessages, ErrorInformation } from './lint';
 
 const AUTOFIX = core.getInput('auto_fix') === 'true';
 const TOKEN = core.getInput('token');
@@ -12,15 +13,28 @@ const repo = github.context.payload.repository!.name;
 const owner = github.context.actor;
 const commitId = github.context.payload.after;
 
-const createReviewComment = async (message: string, path: string, line: number) => {
+const getRelativePath = (path: string): string => {
+  const currentDir = process.cwd().concat('/');
+  const result = path.replace(currentDir, '');
+  return result;
+};
+
+const createReviewMessage = (messages: string[]): string => {
+  return messages.reduce(
+    (comment, message) => comment.concat(`- ${message}\n`),
+  );
+};
+
+const createReviewComment = async (information: ErrorInformation, path: string) => {
   await octokit.rest.pulls.createReviewComment({
     owner,
     repo,
     pull_number: id,
-    body: message,
+    body: createReviewMessage(information.messages),
     commit_id: commitId,
-    path,
-    line,
+    path: getRelativePath(path),
+    line: information.endLine,
+    start_line: information.line,
   });
 };
 
@@ -49,7 +63,7 @@ const createComment = async (message: string) => {
 };
 
 const createFormattedComment = async (message: String) => {
-  const formattedComment = '```Stylus'.concat(`\n${message}`).concat('\n```');
+  const formattedComment = '```solidity'.concat(`\n${message}`).concat('\n```');
   await octokit.rest.issues.createComment({
     owner,
     repo,
@@ -57,10 +71,19 @@ const createFormattedComment = async (message: String) => {
     body: formattedComment,
   });
 }
+
 const main = async () => {
-  const result = await lint();
-  const formatted = await formatedResult(result);
-  await createFormattedComment(formatted);
+  const results = await lint();
+  // if (results.length > 3) {
+  //   const formatted = await formatedResult(results);
+  //   await createFormattedComment(formatted);
+  // } 
+  for(const result of results) {
+    const groupedMessages = GroupMessages(result.messages);
+    for await (const message of groupedMessages) {
+      await createReviewComment(message, result.filePath)
+    }
+  }
 };
 
 main();

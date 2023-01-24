@@ -4,11 +4,6 @@ const AUTOFIX = core.getInput('auto_fix') === 'true';
 
 const eslint = new ESLint({ fix: AUTOFIX });
 
-type ErrorInformation = {
-  line: Number,
-  errors: String[],
-}
-
 export type FileInformation = {
   path: String,
   errors: Linter.LintMessage[],
@@ -16,19 +11,41 @@ export type FileInformation = {
   fixableErrorCount: Number,
 }
 
-const combineErrors = (messages: Linter.LintMessage[]): ErrorInformation[] => {
-  const combined = messages.reduce((acc, message) => {
-    if (!acc.has(message.line)) {
-      acc.set(message.line, {
+export interface ErrorInformation {
+  line: number;
+  endLine: number;
+  messages: string[];
+}
+
+export const GroupMessages = (messages: Linter.LintMessage[]) => {
+  const groupedMessages = messages.reduce((acc, message) => {
+    const key = `${message.line}-${message.endLine ? message.endLine : message.line}`;
+    if (!acc.has(key)) {
+      acc.set(key, {
         line: message.line,
-        errors: [],
+        endLine: message.endLine ? message.endLine : message.line,
+        messages: []
       });
-    }
-    acc.get(message.line)!.errors.push(message.message);
+    } 
+    acc.get(key)!.messages.push(message.message);
     return acc;
-  }, new Map<number, ErrorInformation>());
-  return [...combined.values()];
-};
+  }, new Map<String, ErrorInformation>());
+  return [...groupedMessages.values()];
+}
+
+// const combineErrors = (messages: Linter.LintMessage[]): ErrorInformation[] => {
+//   const combined = messages.reduce((acc, message) => {
+//     if (!acc.has(message.line)) {
+//       acc.set(message.line, {
+//         line: message.line,
+//         errors: [],
+//       });
+//     }
+//     acc.get(message.line)!.errors.push(message.message);
+//     return acc;
+//   }, new Map<number, ErrorInformation>());
+//   return [...combined.values()];
+// };
 
 const getRelativePath = (path: String) => {
   const currentDir = process.cwd().concat('/');
@@ -67,6 +84,6 @@ export const fixCodeErrors = async (result: ESLint.LintResult[]) => {
 
 const test = async () => {
   const result = await lint();
-  const formatted = await formatedResult(result);
-  console.log(formatted);
+  console.log(GroupMessages(result[0].messages));
+  
 }
