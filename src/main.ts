@@ -21,10 +21,11 @@ const getRelativePath = (path: string): string => {
 };
 
 const createReviewMessage = (messages: string[]): string => {
-  console.log('messages: ', messages);
+  console.log("messages: ", messages);
   return messages.reduce(
-    (comment, message) => comment.concat(`-${message}\n`),
-  ), '';
+    (comment, message) => comment.concat(`- ${message}\n`),
+    ''
+  ).trimEnd();
 };
 
 const createReviewComment = async (information: ErrorInformation, path: string) => {
