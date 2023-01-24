@@ -1,7 +1,7 @@
 import { ESLint, Linter } from 'eslint';
 import * as core from '@actions/core';
-const AUTOFIX = core.getInput('auto_fix') === 'true';
 
+const AUTOFIX = core.getInput('auto_fix') === 'true';
 const eslint = new ESLint({ fix: AUTOFIX });
 
 export type FileInformation = {
@@ -14,7 +14,7 @@ export type FileInformation = {
 export interface ErrorInformation {
   line: number;
   endLine: number | undefined;
-  messages: string[];
+  messages: Set<string>;
 }
 
 export const GroupMessages = (messages: Linter.LintMessage[]) => {
@@ -25,10 +25,10 @@ export const GroupMessages = (messages: Linter.LintMessage[]) => {
       acc.set(key, {
         line: message.line,
         endLine: message.line === message.endLine ? undefined : message.endLine,
-        messages: []
+        messages: new Set
       });
     } 
-    acc.get(key)!.messages.push(message.message);
+    acc.get(key)!.messages.add(message.message);
     return acc;
   }, new Map<String, ErrorInformation>());
   return [...groupedMessages.values()];
