@@ -1,4 +1,4 @@
-const bad  = "wrong stuff"
+ const bad  = "wrong stuff"
 
 const badArray = ["a", 'b', 'c', 'd'];
 
