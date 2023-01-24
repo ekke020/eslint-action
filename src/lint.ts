@@ -19,11 +19,12 @@ export interface ErrorInformation {
 
 export const GroupMessages = (messages: Linter.LintMessage[]) => {
   const groupedMessages = messages.reduce((acc, message) => {
+    console.log(message);
     const key = `${message.line}-${message.endLine ? message.endLine : message.line}`;
     if (!acc.has(key)) {
       acc.set(key, {
         line: message.line,
-        endLine: message.endLine,
+        endLine: message.line === message.endLine ? undefined : message.endLine,
         messages: []
       });
     } 
