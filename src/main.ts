@@ -3,6 +3,7 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { ESLint } from 'eslint';
 import {lint ,FileInformation, handleResult, formatedResult, GroupMessages, ErrorInformation } from './lint';
+import util from 'util';
 
 const AUTOFIX = core.getInput('auto_fix') === 'true';
 const TOKEN = core.getInput('token');
@@ -20,6 +21,7 @@ const getRelativePath = (path: string): string => {
 };
 
 const createReviewMessage = (messages: string[]): string => {
+  console.log('messages: ', messages);
   return messages.reduce(
     (comment, message) => comment.concat(`-${message}\n`),
   ), '';
@@ -28,11 +30,15 @@ const createReviewMessage = (messages: string[]): string => {
 const createReviewComment = async (information: ErrorInformation, path: string) => {
   console.log('Line: ', information.endLine ?? information.line);
   console.log('EndLine: ', information.endLine ? information.line : undefined);
+  console.log('information: ', util.inspect(information));
+  
+  const message = createReviewMessage(information.messages);
+  console.log('message: ', message);
   await octokit.rest.pulls.createReviewComment({
     owner,
     repo,
     pull_number: id,
-    body: createReviewMessage(information.messages),
+    body: message,
     commit_id: commitId,
     path: getRelativePath(path),
     line: information.endLine ?? information.line,
@@ -80,7 +86,7 @@ const main = async () => {
   // const formatted = await formatedResult(results);
   // await createFormattedComment(formatted);
   // } 
-  for(const result of results) {
+  for await (const result of results) {
     const groupedMessages = GroupMessages(result.messages);
     for await (const message of groupedMessages) {
       await createReviewComment(message, result.filePath)
