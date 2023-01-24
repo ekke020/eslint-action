@@ -75,14 +75,15 @@ const createFormattedComment = async (message: String) => {
 const main = async () => {
   const results = await lint();
   // if (results.length > 3) {
-  //   const formatted = await formatedResult(results);
-  //   await createFormattedComment(formatted);
+  const formatted = await formatedResult(results);
+  await createFormattedComment(formatted);
   // } 
   for(const result of results) {
     const groupedMessages = GroupMessages(result.messages);
-    for await (const message of groupedMessages) {
-      await createReviewComment(message, result.filePath)
-    }
+    await createReviewComment(groupedMessages[0], result.filePath)
+    // for await (const message of groupedMessages) {
+    //   await createReviewComment(message, result.filePath)
+    // }
   }
 };
 
