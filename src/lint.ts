@@ -70,5 +70,3 @@ const test = async () => {
   const formatted = await formatedResult(result);
   console.log(formatted);
 }
-
-test();
