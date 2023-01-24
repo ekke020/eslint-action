@@ -1,18 +1,10 @@
-env:
-  browser: true
-  es2021: true
 extends:
-  - airbnb-base
-  # - airbnb-typescript/base
-  # - plugin:@typescript-eslint/recommended
+  - 'airbnb-base'
+  - 'airbnb-typescript/base'
 overrides: []
-# parser: '@typescript-eslint/parser'
-# parserOptions:
-  # project: ./tsconfig.json
-  # ecmaVersion: latest
-  # sourceType: module
-# plugins:
-#   - '@typescript-eslint'
+parser: '@typescript-eslint/parser'
+parserOptions:
+  project: './tsconfig.json'
 rules:
   no-console: off
   max-len: 1
