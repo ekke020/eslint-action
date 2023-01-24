@@ -1,5 +1,7 @@
-const badArray = ["a", "b", "c", "d"];
+const badArray = ['a', 'b', 'c', 'd'];
 
-export const blah = () => {
+const blah = () => {
+  console.log(badArray);
+};
 
-}
+blah();
