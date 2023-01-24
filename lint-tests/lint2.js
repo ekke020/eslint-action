@@ -1,5 +1,4 @@
-const badArray = ["a", "b", "c", "d"];
+  const badArray = ["a", "b", "c", "d"];
 
-export const blah = () => {
 
-}
+export const blah = () => {}
