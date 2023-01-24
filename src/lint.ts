@@ -55,7 +55,7 @@ export const lint = async (): Promise<ESLint.LintResult[]> => {
 };
 
 export const formatedResult = async (result: ESLint.LintResult[]): Promise<String> => {
-  const formatter = await eslint.loadFormatter("stylish");
+  const formatter = await eslint.loadFormatter();
 
   return formatter.format(result);
 }
@@ -64,3 +64,11 @@ export const fixCodeErrors = async (result: ESLint.LintResult[]) => {
 
   await ESLint.outputFixes(result);
 }
+
+const test = async () => {
+  const result = await lint();
+  const formatted = await formatedResult(result);
+  console.log(formatted);
+}
+
+test();
