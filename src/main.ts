@@ -21,8 +21,8 @@ const getRelativePath = (path: string): string => {
 
 const createReviewMessage = (messages: string[]): string => {
   return messages.reduce(
-    (comment, message) => comment.concat(`- ${message}\n`),
-  );
+    (comment, message) => comment.concat(`${message}\n- `),
+  ), '-';
 };
 
 const createReviewComment = async (information: ErrorInformation, path: string) => {
@@ -33,8 +33,8 @@ const createReviewComment = async (information: ErrorInformation, path: string) 
     body: createReviewMessage(information.messages),
     commit_id: commitId,
     path: getRelativePath(path),
-    line: information.endLine,
-    start_line: information.line,
+    line: information.endLine ?? information.line,
+    start_line: information.endLine ? information.line : undefined,
   });
 };
 

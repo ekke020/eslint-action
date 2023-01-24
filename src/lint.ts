@@ -13,7 +13,7 @@ export type FileInformation = {
 
 export interface ErrorInformation {
   line: number;
-  endLine: number;
+  endLine: number | undefined;
   messages: string[];
 }
 
@@ -23,7 +23,7 @@ export const GroupMessages = (messages: Linter.LintMessage[]) => {
     if (!acc.has(key)) {
       acc.set(key, {
         line: message.line,
-        endLine: message.endLine ? message.endLine : message.line,
+        endLine: message.endLine,
         messages: []
       });
     } 
