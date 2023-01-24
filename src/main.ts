@@ -21,11 +21,13 @@ const getRelativePath = (path: string): string => {
 
 const createReviewMessage = (messages: string[]): string => {
   return messages.reduce(
-    (comment, message) => comment.concat(`${message}\n- `),
-  ), '-';
+    (comment, message) => comment.concat(`-${message}\n`),
+  ), '';
 };
 
 const createReviewComment = async (information: ErrorInformation, path: string) => {
+  console.log('Line: ', information.endLine ?? information.line);
+  console.log('EndLine: ', information.endLine ? information.line : undefined);
   await octokit.rest.pulls.createReviewComment({
     owner,
     repo,
