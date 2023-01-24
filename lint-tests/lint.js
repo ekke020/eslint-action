@@ -1,13 +1,16 @@
 
 const bad  = "wrong stuff"
- const badArray = ["a", 'b', 'c', 'd']; 
+  const badArray = ["a", 'b', 'c', 'd']; 
 
 
-export const test = () => {
+ export const test = () => {
   
-  const a = badArray[0];
- };
-
+   const a = badArray[0];
+  };
  
- const badFunction = () => {
-   console.log('This is not indented correctly');}
+  
+  const badFunction = () => {
+  console.log('This is not indented correctly');}
+
+
+  
