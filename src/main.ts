@@ -49,7 +49,7 @@ const createComment = async (message: string) => {
 };
 
 const createFormattedComment = async (message: String) => {
-  const formattedComment = '```'.concat(`\n${message}`).concat('\n```');
+  const formattedComment = '```JSON with Comments'.concat(`\n${message}`).concat('\n```');
   await octokit.rest.issues.createComment({
     owner,
     repo,
