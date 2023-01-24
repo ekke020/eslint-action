@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 import * as core from '@actions/core';
 import * as github from '@actions/github';
-import lint, { FileInformation } from './lint';
+import {lint ,FileInformation, handleResult, formatedResult } from './lint';
 
 const AUTOFIX = core.getInput('auto_fix') === 'true';
 const TOKEN = core.getInput('token');
@@ -24,20 +24,20 @@ const createReviewComment = async (message: string, path: string, line: number) 
   });
 };
 
-const fileSection = (file: FileInformation) => {
-  const errorList = file.errors.reduce(
-    (message: string, error) => message
-      .concat(
-        `\n${error.errors.reduce((m: string, err: String) => m.concat(`\n- ${err}`), '')}`,
-      ),
-    '',
-  );
-  return `## ./${file.path}\n${errorList}\n\n**I could autofix ${file.fixableErrorCount}/${file.errorCount} errors.**`;
-};
+// const fileSection = (file: FileInformation) => {
+//   const errorList = file.errors.reduce(
+//     (message: string, error) => message
+//       .concat(
+//         `\n${error.errors.reduce((m: string, err: String) => m.concat(`\n- ${err}`), '')}`,
+//       ),
+//     '',
+//   );
+//   return `## ./${file.path}\n${errorList}\n\n**I could autofix ${file.fixableErrorCount}/${file.errorCount} errors.**`;
+// };
 
-const buildComment = (files: FileInformation[]) => files
-  .map(fileSection)
-  .reduce((comment: string, section: string) => comment.concat(`\n${section}`), '# Errors');
+// const buildComment = (files: FileInformation[]) => files
+//   .map(fileSection)
+//   .reduce((comment: string, section: string) => comment.concat(`\n${section}`), '# Errors');
 
 const createComment = async (message: string) => {
   await octokit.rest.issues.createComment({
@@ -48,10 +48,19 @@ const createComment = async (message: string) => {
   });
 };
 
+const createFormattedComment = async (message: String) => {
+  const formattedComment = '```'.concat(`\n${message}`).concat('\n```');
+  await octokit.rest.issues.createComment({
+    owner,
+    repo,
+    issue_number: id,
+    body: formattedComment,
+  });
+}
 const main = async () => {
-  const result = await lint(AUTOFIX);
-  const comment = buildComment(result);
-  await createComment(comment);
+  const result = await lint();
+  const formatted = await formatedResult(result);
+  await createFormattedComment(formatted);
 };
 
 main();

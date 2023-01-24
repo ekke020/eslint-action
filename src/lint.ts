@@ -1,4 +1,8 @@
 import { ESLint, Linter } from 'eslint';
+import * as core from '@actions/core';
+const AUTOFIX = core.getInput('auto_fix') === 'true';
+
+const eslint = new ESLint({ fix: AUTOFIX });
 
 type ErrorInformation = {
   line: Number,
@@ -7,7 +11,7 @@ type ErrorInformation = {
 
 export type FileInformation = {
   path: String,
-  errors: ErrorInformation[],
+  errors: Linter.LintMessage[],
   errorCount: Number,
   fixableErrorCount: Number,
 }
@@ -34,22 +38,29 @@ const getRelativePath = (path: String) => {
 
 const filterFile = (file: ESLint.LintResult): FileInformation => {
   return {
-    errors: combineErrors(file.messages),
+    errors: file.messages,
     path: getRelativePath(file.filePath),
     errorCount: file.errorCount,
     fixableErrorCount: file.fixableErrorCount,
   };
 };
 
-const handleResult = (lintResult: ESLint.LintResult[]): FileInformation[] => ESLint.getErrorResults(lintResult).map(filterFile);
+export const handleResult = (lintResult: ESLint.LintResult[]): FileInformation[] => ESLint.getErrorResults(lintResult).map(filterFile);
 
-const lint = async (fix: boolean) => {
-  const eslint = new ESLint({ fix });
-
+export const lint = async (): Promise<ESLint.LintResult[]> => {
   const result = await eslint
     .lintFiles(['lint-tests/**/*.js']);
-    
-  return handleResult(result);
+  
+  return result;
 };
 
-export default lint;
+export const formatedResult = async (result: ESLint.LintResult[]): Promise<String> => {
+  const formatter = await eslint.loadFormatter("stylish");
+
+  return formatter.format(result);
+}
+
+export const fixCodeErrors = async (result: ESLint.LintResult[]) => {
+
+  await ESLint.outputFixes(result);
+}
