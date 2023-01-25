@@ -17,17 +17,18 @@ export interface ErrorInformation {
   line: number;
   endLine: number | undefined;
   messages: Set<string>;
+  filePath: string;
 }
 
-export const GroupMessages = (messages: Linter.LintMessage[]) => {
+export const GroupMessages = (messages: Linter.LintMessage[], filePath: string) => {
   const groupedMessages = messages.reduce((acc, message) => {
-    console.log(message);
     const key = `${message.line}-${message.endLine ? message.endLine : message.line}`;
     if (!acc.has(key)) {
       acc.set(key, {
         line: message.line,
         endLine: message.line === message.endLine ? undefined : message.endLine,
         messages: new Set(),
+        filePath,
       });
     }
     acc.get(key)!.messages.add(message.message);
@@ -35,21 +36,6 @@ export const GroupMessages = (messages: Linter.LintMessage[]) => {
   }, new Map<String, ErrorInformation>());
   return [...groupedMessages.values()];
 };
-
-const getRelativePath = (path: String) => {
-  const currentDir = process.cwd().concat('/');
-  const result = path.replace(currentDir, '');
-  return result;
-};
-
-const filterFile = (file: ESLint.LintResult): FileInformation => ({
-  errors: file.messages,
-  path: getRelativePath(file.filePath),
-  errorCount: file.errorCount,
-  fixableErrorCount: file.fixableErrorCount,
-});
-
-// export const handleResult = (lintResult: ESLint.LintResult[]): FileInformation[] => ESLint.getErrorResults(lintResult).map(filterFile);
 
 export const filterOutFixable = (results: ESLint.LintResult[]) => results.filter((result) => {
   result.messages = result.messages.filter((message) => !message.fix);
@@ -70,10 +56,3 @@ export const formatedResult = async (results: ESLint.LintResult[]): Promise<Stri
 export const fixCodeErrors = async (results: ESLint.LintResult[]) => {
   await ESLint.outputFixes(results);
 };
-
-const test = async () => {
-  const results = await lint();
-  console.log(results);
-};
-
-// test();
