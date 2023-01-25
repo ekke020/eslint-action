@@ -18,6 +18,10 @@ inputs:
     description: "Leave comments on the PR"
     required: false
     default: "false"
+  comment_limit:
+    description: "The maximum number of comments"
+    required: false
+    default: "3"
   extension:
     description: "The file extension that should be targeted by the linter"
     required: false
