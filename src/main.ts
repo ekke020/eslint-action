@@ -34,6 +34,8 @@ const createReviewMessage = (messages: Set<string>): string => [...messages].red
 const createReviewComment = async (
   information: ErrorInformation,
 ): Promise<boolean> => {
+  console.log('Information: ', information);
+  console.log('relative path: ', getRelativePath(information.filePath));
   const res = await octokit.rest.pulls.createReviewComment({
     owner,
     repo,
