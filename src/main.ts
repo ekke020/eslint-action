@@ -18,7 +18,8 @@ const id = github.context.payload.pull_request!.number;
 const repo = github.context.payload.repository!.name;
 const owner = github.context.actor;
 const commitId = github.context.payload.after;
-
+console.log(github.context);
+console.log('Commit ID: ', commitId);
 const getRelativePath = (path: string): string => {
   const currentDir = process.cwd().concat('/');
   const result = path.replace(currentDir, '');
