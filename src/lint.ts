@@ -2,7 +2,7 @@ import { ESLint, Linter } from 'eslint';
 import * as core from '@actions/core';
 
 const AUTOFIX = core.getInput('auto_fix') === 'true';
-const LINT_PATH = core.getInput('path') || 'lint-tests';
+const ROOT = core.getInput('root') || 'lint-tests';
 const FILE_EXTENSION = core.getInput('extension') || 'ts';
 const eslint = new ESLint({ fix: AUTOFIX });
 
@@ -58,7 +58,7 @@ export const filterOutFixable = (results: ESLint.LintResult[]) => results.filter
 
 export const lint = async (): Promise<ESLint.LintResult[]> => {
   const results = await eslint
-    .lintFiles([`${LINT_PATH}/**/*.${FILE_EXTENSION}`]);
+    .lintFiles([`${ROOT}/**/*.${FILE_EXTENSION}`]);
   return results;
 };
 
@@ -70,13 +70,9 @@ export const formatedResult = async (results: ESLint.LintResult[]): Promise<Stri
 export const fixCodeErrors = async (results: ESLint.LintResult[]) => {
   await ESLint.outputFixes(results);
 };
-import * as github from '@actions/github';
-
-const octokit = github.getOctokit('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');
 
 const test = async () => {
   const results = await lint();
-  octokit.rest.git.createCommit();
   console.log(results);
 };
 
