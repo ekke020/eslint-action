@@ -7,10 +7,10 @@ inputs:
     description: "Auto fixes certain errors/warnings"
     required: false
     default: "false"
-  path:
-    description: "the path for the lint"
+  root:
+    description: "The folder name to target"
     required: false
-    default: "src/"
+    default: "src"
   token:
     description: "Token used for comments"
     required: true
@@ -22,7 +22,7 @@ inputs:
     description: "The file extension that should be targeted by the linter"
     required: false
     default: "ts"
-    
+
 runs:
   using: node16
   main: lib/index.js
