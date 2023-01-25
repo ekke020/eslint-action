@@ -21,8 +21,8 @@ const commitId = github.context.payload.after;
 console.log(github.context);
 console.log('Commit ID: ', commitId);
 const getRelativePath = (path: string): string => {
-  const currentDir = process.cwd();
-  const result = path.replace(currentDir, '.');
+  const currentDir = process.cwd().concat('/');
+  const result = path.replace(currentDir, '');
   return result.trim();
 };
 
@@ -34,16 +34,13 @@ const createReviewMessage = (messages: Set<string>): string => [...messages].red
 const createReviewComment = async (
   information: ErrorInformation,
 ): Promise<boolean> => {
-  console.log('Information: ', information);
-  const path = getRelativePath(information.filePath);
-  console.log('relative path: ', path);
   const res = await octokit.rest.pulls.createReviewComment({
     owner,
     repo,
     pull_number: id,
     body: createReviewMessage(information.messages),
     commit_id: commitId,
-    path,
+    path: 'lint-tests/lint.js', // getRelativePath(information.filePath)
     line: information.endLine ?? information.line,
     start_line: information.endLine ? information.line : undefined,
   });
