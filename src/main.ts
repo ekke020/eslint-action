@@ -23,7 +23,7 @@ console.log('Commit ID: ', commitId);
 const getRelativePath = (path: string): string => {
   const currentDir = process.cwd().concat('/');
   const result = path.replace(currentDir, '');
-  return result;
+  return result.trim();
 };
 
 const createReviewMessage = (messages: Set<string>): string => [...messages].reduce(
@@ -35,14 +35,15 @@ const createReviewComment = async (
   information: ErrorInformation,
 ): Promise<boolean> => {
   console.log('Information: ', information);
-  console.log('relative path: ', getRelativePath(information.filePath));
+  const path = getRelativePath(information.filePath);
+  console.log('relative path: ', path);
   const res = await octokit.rest.pulls.createReviewComment({
     owner,
     repo,
     pull_number: id,
     body: createReviewMessage(information.messages),
     commit_id: commitId,
-    path: getRelativePath(information.filePath),
+    path,
     line: information.endLine ?? information.line,
     start_line: information.endLine ? information.line : undefined,
   });
