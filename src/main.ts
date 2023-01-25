@@ -45,7 +45,7 @@ const createReviewComment = async (
     pull_number: id,
     body: createReviewMessage(information.messages),
     commit_id: commitId,
-    path: 'lint-tests/lint.js', // getRelativePath(information.filePath)
+    path: getRelativePath(information.filePath),
     line: information.endLine ?? information.line,
     start_line: information.endLine ? information.line : undefined,
   });
@@ -81,6 +81,7 @@ const postComments = async (results: ESLint.LintResult[]) => {
   try {
     messages.some(async (message) => {
       await createReviewComment(message);
+      console.log('count: ', count);
       return ++count > COMMENT_LIMIT;
     });
   } catch (e) {
