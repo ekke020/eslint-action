@@ -2,6 +2,8 @@ import { ESLint, Linter } from 'eslint';
 import * as core from '@actions/core';
 
 const AUTOFIX = core.getInput('auto_fix') === 'true';
+const LINT_PATH = core.getInput('path') || 'lint-tests';
+const FILE_EXTENSION = core.getInput('extension') || 'ts';
 const eslint = new ESLint({ fix: AUTOFIX });
 
 export type FileInformation = {
@@ -25,28 +27,14 @@ export const GroupMessages = (messages: Linter.LintMessage[]) => {
       acc.set(key, {
         line: message.line,
         endLine: message.line === message.endLine ? undefined : message.endLine,
-        messages: new Set
+        messages: new Set(),
       });
-    } 
+    }
     acc.get(key)!.messages.add(message.message);
     return acc;
   }, new Map<String, ErrorInformation>());
   return [...groupedMessages.values()];
-}
-
-// const combineErrors = (messages: Linter.LintMessage[]): ErrorInformation[] => {
-//   const combined = messages.reduce((acc, message) => {
-//     if (!acc.has(message.line)) {
-//       acc.set(message.line, {
-//         line: message.line,
-//         errors: [],
-//       });
-//     }
-//     acc.get(message.line)!.errors.push(message.message);
-//     return acc;
-//   }, new Map<number, ErrorInformation>());
-//   return [...combined.values()];
-// };
+};
 
 const getRelativePath = (path: String) => {
   const currentDir = process.cwd().concat('/');
@@ -54,37 +42,42 @@ const getRelativePath = (path: String) => {
   return result;
 };
 
-const filterFile = (file: ESLint.LintResult): FileInformation => {
-  return {
-    errors: file.messages,
-    path: getRelativePath(file.filePath),
-    errorCount: file.errorCount,
-    fixableErrorCount: file.fixableErrorCount,
-  };
-};
+const filterFile = (file: ESLint.LintResult): FileInformation => ({
+  errors: file.messages,
+  path: getRelativePath(file.filePath),
+  errorCount: file.errorCount,
+  fixableErrorCount: file.fixableErrorCount,
+});
 
-export const handleResult = (lintResult: ESLint.LintResult[]): FileInformation[] => ESLint.getErrorResults(lintResult).map(filterFile);
+// export const handleResult = (lintResult: ESLint.LintResult[]): FileInformation[] => ESLint.getErrorResults(lintResult).map(filterFile);
+
+export const filterOutFixable = (results: ESLint.LintResult[]) => results.filter((result) => {
+  result.messages = result.messages.filter((message) => !message.fix);
+  return result.messages.length > 0;
+});
 
 export const lint = async (): Promise<ESLint.LintResult[]> => {
-  const result = await eslint
-    .lintFiles(['lint-tests/**/*.js']);
-  
-  return result;
+  const results = await eslint
+    .lintFiles([`${LINT_PATH}/**/*.${FILE_EXTENSION}`]);
+  return results;
 };
 
-export const formatedResult = async (result: ESLint.LintResult[]): Promise<String> => {
+export const formatedResult = async (results: ESLint.LintResult[]): Promise<String> => {
   const formatter = await eslint.loadFormatter();
+  return formatter.format(results);
+};
 
-  return formatter.format(result);
-}
+export const fixCodeErrors = async (results: ESLint.LintResult[]) => {
+  await ESLint.outputFixes(results);
+};
+import * as github from '@actions/github';
 
-export const fixCodeErrors = async (result: ESLint.LintResult[]) => {
-
-  await ESLint.outputFixes(result);
-}
+const octokit = github.getOctokit('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');
 
 const test = async () => {
-  const result = await lint();
-  console.log(GroupMessages(result[0].messages));
-  
-}
+  const results = await lint();
+  octokit.rest.git.createCommit();
+  console.log(results);
+};
+
+test();
