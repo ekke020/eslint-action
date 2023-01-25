@@ -65,6 +65,7 @@ const presentAllErrors = async (results: ESLint.LintResult[]) => {
 };
 
 const main = async () => {
+  console.log(github.context);
   let results = await lint();
   if (AUTOFIX) {
     // TODO: Add automatic git commit after code fix.
