@@ -18,3 +18,5 @@ jobs:
         with:
           token: ${{ github.token }}
           comment: true
+          root: 'lint-tests'
+          extension: 'js'
