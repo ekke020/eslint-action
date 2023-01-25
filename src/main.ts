@@ -17,9 +17,14 @@ const octokit = github.getOctokit(TOKEN);
 const id = github.context.payload.pull_request!.number;
 const repo = github.context.payload.repository!.name;
 const owner = github.context.actor;
-const commitId = github.context.payload.after || github.context.sha;
+const getCommitId = () => {
+  const url = github.context.payload.pull_request!.statuses_url;
+  return github.context.payload.after || url.substring(url.lastIndexOf('/') + 1);
+};
+const commitId = getCommitId();
 console.log(github.context);
 console.log('Commit ID: ', commitId);
+
 const getRelativePath = (path: string): string => {
   const currentDir = process.cwd().concat('/');
   const result = path.replace(currentDir, '');
@@ -33,8 +38,8 @@ const createReviewMessage = (messages: Set<string>): string => [...messages].red
 
 const createReviewComment = async (
   information: ErrorInformation,
-): Promise<boolean> => {
-  const res = await octokit.rest.pulls.createReviewComment({
+) => {
+  await octokit.rest.pulls.createReviewComment({
     owner,
     repo,
     pull_number: id,
@@ -44,7 +49,6 @@ const createReviewComment = async (
     line: information.endLine ?? information.line,
     start_line: information.endLine ? information.line : undefined,
   });
-  return res.status === 201;
 };
 
 const createComment = async (message: string) => {
@@ -74,12 +78,12 @@ const presentAllErrors = async (results: ESLint.LintResult[]) => {
 const postComments = async (results: ESLint.LintResult[]) => {
   const messages = results.flatMap((result) => GroupMessages(result.messages, result.filePath));
   let count = 0;
-  let isError = false;
-  messages.some(async (message) => {
-    isError = await createReviewComment(message) ? isError : true;
-    return ++count > COMMENT_LIMIT;
-  });
-  if (isError) {
+  try {
+    messages.some(async (message) => {
+      await createReviewComment(message);
+      return ++count > COMMENT_LIMIT;
+    });
+  } catch (e) {
     await presentAllErrors(results);
   }
 };
