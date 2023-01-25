@@ -17,7 +17,7 @@ const octokit = github.getOctokit(TOKEN);
 const id = github.context.payload.pull_request!.number;
 const repo = github.context.payload.repository!.name;
 const owner = github.context.actor;
-const commitId = github.context.payload.after;
+const commitId = github.context.payload.after || github.context.sha;
 console.log(github.context);
 console.log('Commit ID: ', commitId);
 const getRelativePath = (path: string): string => {
