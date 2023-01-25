@@ -10,7 +10,7 @@ inputs:
   path:
     description: "the path for the lint"
     required: false
-    default: "src/*"
+    default: "src/"
   token:
     description: "Token used for comments"
     required: true
@@ -18,6 +18,10 @@ inputs:
     description: "Leave comments on the PR"
     required: false
     default: "false"
+  extension:
+    description: "The file extension that should be targeted by the linter"
+    required: false
+    default: "ts"
     
 runs:
   using: node16
