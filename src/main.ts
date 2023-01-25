@@ -78,6 +78,8 @@ const presentAllErrors = async (results: ESLint.LintResult[]) => {
 const postComments = async (results: ESLint.LintResult[]) => {
   const messages = results.flatMap((result) => GroupMessages(result.messages, result.filePath));
   let count = 0;
+  console.log('commentLimit: ', COMMENT_LIMIT);
+  console.log('messages:', messages);
   try {
     messages.some(async (message) => {
       await createReviewComment(message);
