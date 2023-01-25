@@ -21,8 +21,8 @@ const commitId = github.context.payload.after;
 console.log(github.context);
 console.log('Commit ID: ', commitId);
 const getRelativePath = (path: string): string => {
-  const currentDir = process.cwd().concat('/');
-  const result = path.replace(currentDir, '');
+  const currentDir = process.cwd();
+  const result = path.replace(currentDir, '.');
   return result.trim();
 };
 
