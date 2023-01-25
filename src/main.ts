@@ -67,6 +67,7 @@ const presentAllErrors = async (results: ESLint.LintResult[]) => {
 const main = async () => {
   let results = await lint();
   if (AUTOFIX) {
+    // TODO: Add automatic git commit after code fix.
     fixCodeErrors(results);
     results = filterOutFixable(results);
   }
