@@ -9,5 +9,5 @@ const badFunction = () => {
 export const test = () => {
   badFunction();
   const a = badArray[0];
-  console.log(a);
+  console.log('hello: ',a);
 };
