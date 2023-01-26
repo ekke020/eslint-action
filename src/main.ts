@@ -13,7 +13,7 @@ const COMMENT = core.getInput('comment') === 'true';
 const COMMENT_LIMIT = Number(core.getInput('comment_limit')) || 3;
 
 const octokit = github.getOctokit(TOKEN);
-
+console.log(github.context);
 const id = github.context.payload.pull_request!.number;
 const repo = github.context.payload.repository!.name;
 const owner = github.context.actor;
