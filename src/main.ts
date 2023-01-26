@@ -83,6 +83,7 @@ const postComments = async (results: ESLint.LintResult[]) => {
   try {
     messages.some(async (message) => {
       await createReviewComment(message);
+      console.log('Count: ', count);
       return ++count === COMMENT_LIMIT;
     });
   } catch (e) {
