@@ -77,17 +77,17 @@ const presentAllErrors = async (results: ESLint.LintResult[]) => {
 
 const postComments = async (results: ESLint.LintResult[]) => {
   const messages = results.flatMap((result) => GroupMessages(result.messages, result.filePath));
-  let count = 0;
-  console.log('commentLimit: ', COMMENT_LIMIT);
-  console.log('messages:', messages);
-  try {
-    messages.some(async (message) => {
-      await createReviewComment(message);
-      console.log('Count: ', count);
-      return ++count === COMMENT_LIMIT;
-    });
-  } catch (e) {
-    await presentAllErrors(results);
+  if (messages.length > COMMENT_LIMIT) {
+    const formatted = await formatedResult(results);
+    await createFormattedComment(formatted);
+  } else {
+    try {
+      for (const message of messages) {
+        await createReviewComment(message);
+      }
+    } catch (e) {
+      await presentAllErrors(results);
+    }
   }
 };
 
