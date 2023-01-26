@@ -22,8 +22,6 @@ const getCommitId = () => {
   return github.context.payload.after || url.substring(url.lastIndexOf('/') + 1);
 };
 const commitId = getCommitId();
-console.log(github.context);
-console.log('Commit ID: ', commitId);
 
 const getRelativePath = (path: string): string => {
   const currentDir = process.cwd().concat('/');
@@ -68,6 +66,7 @@ const createFormattedComment = async (message: String, title: String = '') => {
     issue_number: id,
     body: formattedComment,
   });
+  core.setFailed('There are linting errors that need to be addressed');
 };
 
 const presentAllErrors = async (results: ESLint.LintResult[]) => {
@@ -80,7 +79,7 @@ const postComments = async (results: ESLint.LintResult[]) => {
   if (messages.length > COMMENT_LIMIT) {
     const formatted = await formatedResult(results);
     await createFormattedComment(formatted);
-  } else {
+  } else if (messages.length > 0) {
     try {
       for (const message of messages) {
         await createReviewComment(message);
@@ -88,6 +87,7 @@ const postComments = async (results: ESLint.LintResult[]) => {
     } catch (e) {
       await presentAllErrors(results);
     }
+    core.setFailed('There are linting errors that need to be addressed');
   }
 };
 
