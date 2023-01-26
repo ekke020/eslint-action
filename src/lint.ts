@@ -2,7 +2,7 @@ import { ESLint, Linter } from 'eslint';
 import * as core from '@actions/core';
 
 const AUTOFIX = core.getInput('auto_fix') === 'true';
-const ROOT = core.getInput('root') || 'lint-tests';
+const ROOT = core.getInput('root') || 'src';
 const FILE_EXTENSION = core.getInput('extension') || 'ts';
 const eslint = new ESLint({ fix: AUTOFIX });
 

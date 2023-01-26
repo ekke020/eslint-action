@@ -1,6 +1,9 @@
 name: Testing action
-on: [pull_request]
-
+on:
+  workflow_dispatch: {}
+  push:
+    branches-ignore: [mob/**, main, dependabot/**]
+    
 jobs:
   testing:
     runs-on: ubuntu-latest

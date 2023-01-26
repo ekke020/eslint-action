@@ -76,7 +76,6 @@ const presentAllErrors = async (results: ESLint.LintResult[]) => {
 
 const postComments = async (results: ESLint.LintResult[]) => {
   const messages = results.flatMap((result) => GroupMessages(result.messages, result.filePath));
-  console.log(messages);
   if (messages.length > COMMENT_LIMIT) {
     const formatted = await formatedResult(results);
     await createFormattedComment(formatted);
