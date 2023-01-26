@@ -3,7 +3,7 @@ const bad = '"wrong stuff"';
 const badArray = ['"a"', 'b', 'c', 'd'];
 
 const badFunction = () => {
-  console.log('This is not indented correctly');
+  console.log('This is not indented correctly: ', bad);
 };
 
 export const test = () => {
