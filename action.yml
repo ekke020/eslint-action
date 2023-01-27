@@ -28,4 +28,4 @@ inputs:
     default: ts
 runs:
   using: node16
-  main: lib/index.js
+  main: src/main.ts
