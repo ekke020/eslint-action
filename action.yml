@@ -1,32 +1,31 @@
-name: "Auto eslint formatter"
-description: "Format JS code with EsLint & leave comments"
-author: "Johan Ekman"
-
+---
+name: Auto eslint formatter
+description: Format JS code with EsLint & leave comments
+author: Johan Ekman
 inputs:
   auto_fix:
-    description: "Auto fixes certain errors/warnings"
+    description: Auto fixes certain errors/warnings
     required: false
-    default: "false"
+    default: 'false'
   root:
-    description: "The folder name to target"
+    description: The folder name to target
     required: false
-    default: "src"
+    default: src
   token:
-    description: "Token used for comments"
+    description: Token used for comments
     required: true
   comment:
-    description: "Leave comments on the PR"
+    description: Leave comments on the PR
     required: false
-    default: "false"
+    default: 'false'
   comment_limit:
-    description: "The maximum number of comments"
+    description: The maximum number of comments
     required: false
-    default: "3"
+    default: '3'
   extension:
-    description: "The file extension that should be targeted by the linter"
+    description: The file extension that should be targeted by the linter
     required: false
-    default: "ts"
-
+    default: ts
 runs:
   using: node16
   main: lib/index.js
