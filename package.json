@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "main.ts",
-  "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "ncc": "ncc build src/main.ts -m -o lib/",
