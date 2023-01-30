@@ -56,3 +56,9 @@ export const formatedResult = async (results: ESLint.LintResult[]): Promise<Stri
 export const fixCodeErrors = async (results: ESLint.LintResult[]) => {
   await ESLint.outputFixes(results);
 };
+
+const test = async () => {
+  console.log(await lint());
+};
+
+test();

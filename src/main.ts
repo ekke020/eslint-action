@@ -13,14 +13,14 @@ const COMMENT = core.getInput('comment') === 'true';
 const COMMENT_LIMIT = Number(core.getInput('comment_limit')) || 3;
 
 const octokit = github.getOctokit(TOKEN);
-const id = 2; //github.context.payload.pull_request!.number ;
-const repo = 'ekke020'; //github.context.payload.repository!.name;
+const id = github.context.payload.pull_request!.number ;
+const repo = github.context.payload.repository!.name;
 const owner = github.context.actor;
 const getCommitId = () => {
   const url = github.context.payload.pull_request!.statuses_url;
   return github.context.payload.after || url.substring(url.lastIndexOf('/') + 1);
 };
-const commitId = 'test'; // getCommitId();
+const commitId = getCommitId();
 
 const getRelativePath = (path: string): string => {
   const currentDir = process.cwd().concat('/');
