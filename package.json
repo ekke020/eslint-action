@@ -4,12 +4,14 @@
   "description": "",
   "main": "./src/main.ts",
   "scripts": {
-    "build": "npm run ncc && npm run move-js-yaml && npm run fix-js-yaml && npm run move-chalk && npm run fix-chalk",
+    "build": "npm run ncc && npm run move-dependencies && npm run fix-paths",
     "ncc": "ncc build src/main.ts -o dist/",
-    "move-js-yaml": "cp -R node_modules/js-yaml/ dist/js-yaml",
-    "move-chalk": "cp -R node_modules/chalk dist/chalk",
+    "move-dependencies": "cp -R node_modules/{js-yaml,chalk,strip-ansi,text-table} dist/",
+    "fix-paths": "npm run fix-js-yaml && npm run fix-chalk && npm run fix-strip-ansi && npm run fix-text-table",
     "fix-js-yaml": "sed -i 's/js-yaml\/\\.\\/js-yaml/g' dist/index.js",
     "fix-chalk": "sed -i 's/\"chalk\"\/\\\".\\.\\/chalk\"/g' dist/formatters/stylish.js",
+    "fix-strip-ansi": "sed -i '' 's/\"strip-ansi\"\/\\\".\\.\\/strip-ansi\"/g' dist/formatters/stylish.js",
+    "fix-text-table": "sed -i 's/\"text-table\"\/\\\".\\.\\/text-table\"/g' dist/formatters/stylish.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
