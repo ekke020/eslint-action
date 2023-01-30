@@ -7,7 +7,7 @@
     "build": "npm run ncc && npm run move-js-yaml && npm run replace-text",
     "ncc": "ncc build src/main.ts -o dist/",
     "move-js-yaml": "cp -R node_modules/js-yaml/ dist/js-yaml",
-    "replace-text": "sed -i 's/js-yaml/\\.\/js-yaml/g' dist/index.js",
+    "replace-text": "sed -i 's/js\\-yaml/\\.\/js\\-yaml/g' dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
