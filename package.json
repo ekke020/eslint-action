@@ -2,9 +2,10 @@
   "name": "eslint-action",
   "version": "1.0.0",
   "description": "",
+  "main": "./dist/index.js",
   "scripts": {
     "build": "npm run ncc",
-    "ncc": "ncc build src/lint.ts -o dist/",
+    "ncc": "ncc build src/main.ts -a -o dist/",
     "copy-action": "cpx action.yml ../../nodejs/src/lint-node",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
