@@ -12,7 +12,7 @@
     "fix-chalk": "sed -i 's/\"chalk\"\/\\\".\\.\\/chalk\"/g' dist/formatters/stylish.js",
     "fix-strip-ansi": "sed -i 's/\"strip-ansi\"\/\\\".\\.\\/strip-ansi\"/g' dist/formatters/stylish.js",
     "fix-text-table": "sed -i 's/\"text-table\"\/\\\".\\.\\/text-table\"/g' dist/formatters/stylish.js",
-    "fix-ansi-styles": "sed -i '' 's/\"ansi-styles\"\/\\\".\\.\\/.\\.\\/ansi-styles\"/g' dist/chalk/source/index.js",
+    "fix-ansi-styles": "sed -i 's/\"ansi-styles\"\/\\\".\\.\\/.\\.\\/ansi-styles\"/g' dist/chalk/source/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
