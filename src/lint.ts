@@ -57,8 +57,8 @@ export const fixCodeErrors = async (results: ESLint.LintResult[]) => {
   await ESLint.outputFixes(results);
 };
 
-const test = async () => {
-  console.log(await lint());
-};
+// const test = async () => {
+//   console.log(await lint());
+// };
 
-test();
+// test();
