@@ -4,10 +4,12 @@
   "description": "",
   "main": "./src/main.ts",
   "scripts": {
-    "build": "npm run ncc && npm run move-js-yaml && npm run replace-text",
+    "build": "npm run ncc && npm run move-js-yaml && npm run fix-js-yaml && npm run move-chalk && npm run fix-chalk",
     "ncc": "ncc build src/main.ts -o dist/",
     "move-js-yaml": "cp -R node_modules/js-yaml/ dist/js-yaml",
-    "replace-text": "sed -i 's/js-yaml\/\\.\\/js-yaml/g' dist/index.js",
+    "move-chalk": "cp -R node_modules/chalk /dist/chalk",
+    "fix-js-yaml": "sed -i 's/js-yaml\/\\.\\/js-yaml/g' dist/index.js",
+    "fix-chalk": "sed -i 's/\"chalk\"\/\\\".\\/chalk\"/g' dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
