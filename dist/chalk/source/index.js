@@ -1,5 +1,5 @@
 'use strict';
-const ansiStyles = require('ansi-styles');
+const ansiStyles = require('../../ansi-styles');
 const {stdout: stdoutColor, stderr: stderrColor} = require('supports-color');
 const {
 	stringReplaceAll,
