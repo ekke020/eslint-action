@@ -6,12 +6,13 @@
   "scripts": {
     "build": "npm run ncc && npm run move-dependencies && npm run fix-paths",
     "ncc": "ncc build src/main.ts -o dist/",
-    "move-dependencies": "cp -r node_modules/js-yaml node_modules/chalk node_modules/strip-ansi node_modules/text-table dist/",
-    "fix-paths": "npm run fix-js-yaml && npm run fix-chalk && npm run fix-strip-ansi && npm run fix-text-table",
+    "move-dependencies": "cp -r node_modules/js-yaml node_modules/chalk node_modules/strip-ansi node_modules/text-table node_modules/ansi-styles dist/",
+    "fix-paths": "npm run fix-js-yaml && npm run fix-chalk && npm run fix-strip-ansi && npm run fix-text-table && npm run fix-ansi-styles",
     "fix-js-yaml": "sed -i 's/js-yaml\/\\.\\/js-yaml/g' dist/index.js",
     "fix-chalk": "sed -i 's/\"chalk\"\/\\\".\\.\\/chalk\"/g' dist/formatters/stylish.js",
     "fix-strip-ansi": "sed -i 's/\"strip-ansi\"\/\\\".\\.\\/strip-ansi\"/g' dist/formatters/stylish.js",
     "fix-text-table": "sed -i 's/\"text-table\"\/\\\".\\.\\/text-table\"/g' dist/formatters/stylish.js",
+    "fix-ansi-styles": "sed -i '' 's/\"ansi-styles\"\/\\\".\\.\\/.\\.\\/ansi-styles\"/g' dist/chalk/source/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
