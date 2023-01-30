@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run ncc && npm run move-dependencies && npm run fix-paths",
     "ncc": "ncc build src/main.ts -o dist/",
-    "move-dependencies": "cp -R node_modules/{js-yaml,chalk,strip-ansi,text-table} dist/",
+    "move-dependencies": "cp -r node_modules/{js-yaml,chalk,strip-ansi,text-table} dist/",
     "fix-paths": "npm run fix-js-yaml && npm run fix-chalk && npm run fix-strip-ansi && npm run fix-text-table",
     "fix-js-yaml": "sed -i 's/js-yaml\/\\.\\/js-yaml/g' dist/index.js",
     "fix-chalk": "sed -i 's/\"chalk\"\/\\\".\\.\\/chalk\"/g' dist/formatters/stylish.js",
