@@ -11,5 +11,7 @@ jobs:
         uses: actions/setup-node@v3
       - name: Install dependencies
         run: npm install
+      - name: remove source files
+        run: rm -rf dist/
       - name: build
         run: npm run build
