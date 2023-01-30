@@ -9,7 +9,7 @@
     "move-js-yaml": "cp -R node_modules/js-yaml/ dist/js-yaml",
     "move-chalk": "cp -R node_modules/chalk dist/chalk",
     "fix-js-yaml": "sed -i 's/js-yaml\/\\.\\/js-yaml/g' dist/index.js",
-    "fix-chalk": "sed -i 's/\"chalk\"\/\\\".\\/chalk\"/g' dist/formatters/stylish.js",
+    "fix-chalk": "sed -i 's/\"chalk\"\/\\\".\\.\\/chalk\"/g' dist/formatters/stylish.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
