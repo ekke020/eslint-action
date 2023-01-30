@@ -5,7 +5,7 @@
   "main": "main.ts",
   "type": "module",
   "scripts": {
-    "build": "npm run ncc",
+    "build": "tsc -p tsconfig.build.json",
     "ncc": "ncc build src/main.ts -m -o lib/",
     "copy-action": "cpx action.yml ../../nodejs/src/lint-node",
     "test": "echo \"Error: no test specified\" && exit 1"
