@@ -6,8 +6,8 @@
   "scripts": {
     "build": "npm run ncc && npm run move-dependencies && npm run fix-paths",
     "ncc": "ncc build src/main.ts -o dist/",
-    "move-dependencies": "cp -r node_modules/js-yaml node_modules/chalk node_modules/strip-ansi node_modules/text-table node_modules/ansi-styles node_modules/supports-color node_modules/has-flag dist/",
-    "fix-paths": "npm run fix-js-yaml && npm run fix-chalk && npm run fix-strip-ansi && npm run fix-text-table && npm run fix-ansi-styles && npm run fix-supports-color && npm run fix-has-flag",
+    "move-dependencies": "cp -r node_modules/js-yaml node_modules/chalk node_modules/strip-ansi node_modules/text-table node_modules/ansi-styles node_modules/supports-color node_modules/has-flag node_module/ansi-regex dist/",
+    "fix-paths": "npm run fix-js-yaml && npm run fix-chalk && npm run fix-strip-ansi && npm run fix-text-table && npm run fix-ansi-styles && npm run fix-supports-color && npm run fix-has-flag && npm run fix-ansi-regex",
     "fix-js-yaml": "sed -i 's/js-yaml\/\\.\\/js-yaml/g' dist/index.js",
     "fix-chalk": "sed -i 's/\"chalk\"\/\\\".\\.\\/chalk\"/g' dist/formatters/stylish.js",
     "fix-strip-ansi": "sed -i 's/\"strip-ansi\"\/\\\".\\.\\/strip-ansi\"/g' dist/formatters/stylish.js",
@@ -15,6 +15,7 @@
     "fix-ansi-styles": "sed -i \"s/'ansi-styles'\/\\'.\\.\\/.\\.\\/ansi-styles'/g\" dist/chalk/source/index.js",
     "fix-supports-color": "sed -i \"s/'supports-color'\/\\'.\\.\\/.\\.\\/supports-color'/g\" dist/chalk/source/index.js",
     "fix-has-flag": "sed -i \"s/'has-flag'\/\\'.\\.\\/has-flag'/g\" dist/supports-color/index.js",
+    "fix-ansi-regex": "sed -i \"s/'ansi-regex'\/\\'.\\.\\/ansi-regex'/g\" dist/strip-ansi/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
